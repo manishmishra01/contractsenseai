@@ -1,0 +1,16 @@
+pytesseract
+Pillow
+fastapi
+uvicorn
+python-multipart
+pdfplumber
+PyMuPDF
+pypdf
+sqlalchemy
+python-dotenv
+pydantic-settings
+aiosqlite
+groq
+pytest
+pytest-asyncio
+httpx

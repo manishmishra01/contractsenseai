@@ -1,0 +1,14 @@
+# -------- Python (backend) --------
+backend/myenv/
+backend/.env
+backend/__pycache__/
+*.pyc
+
+# -------- Node (frontend) --------
+frontend/node_modules/
+frontend/dist/
+
+# -------- Global --------
+.env
+.DS_Store
+Thumbs.db
