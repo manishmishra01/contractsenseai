@@ -57,13 +57,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to Railway
-        run: |
-          npm install -g @railway/cli
-          railway redeploy --service contractsense-backend --yes
+      - name: Deploy to Fly.io
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Launch on Fly.io
+        run: flyctl deploy --config BACKEND/fly.toml --remote-only
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-
-
-
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
