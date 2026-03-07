@@ -12,3 +12,4 @@ frontend/dist/
 .env
 .DS_Store
 Thumbs.db
+BACKEND/contractsense.db
