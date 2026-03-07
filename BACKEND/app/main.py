@@ -21,7 +21,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="ContractSense AI — Prototype",
+    title="ContractSense AI",
     version="0.1.0",
     lifespan=lifespan,
 )
@@ -37,6 +37,6 @@ app.include_router(upload.router,   prefix="/api/v1", tags=["Upload"])
 app.include_router(analysis.router, prefix="/api/v1", tags=["Analysis"])
 
 
-@app.get("/healths")
+@app.get("/health")
 def health():
-    return {"status": "ok", "version2": "0.1.0-prototype"}
+    return {"status": "ok", "version": "0.1.0-prototype"}
