@@ -37,6 +37,6 @@ app.include_router(upload.router,   prefix="/api/v1", tags=["Upload"])
 app.include_router(analysis.router, prefix="/api/v1", tags=["Analysis"])
 
 
-@app.get("/health")
+@app.get("/healths")
 def health():
     return {"status": "ok", "version2": "0.1.0-prototype"}
