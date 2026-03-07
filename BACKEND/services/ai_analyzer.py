@@ -5,7 +5,7 @@ import logging
 import time
 from groq import Groq
 from dotenv import load_dotenv
-
+print("AI Analyzer module loaded")
 load_dotenv()
 logger = logging.getLogger(__name__)
 
