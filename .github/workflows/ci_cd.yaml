@@ -63,16 +63,7 @@ jobs:
           railway redeploy --service contractsense-backend --yes
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-```
 
----
 
-## Flow
-```
-push to main
-     ↓
-test job → runs pytest ✅
-     ↓
-build job → builds & pushes Docker image ✅
-     ↓
-deploy job → redeploys Railway ✅
+
+
