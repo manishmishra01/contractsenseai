@@ -39,4 +39,4 @@ app.include_router(analysis.router, prefix="/api/v1", tags=["Analysis"])
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "version": "0.1.0-prototype"}
+    return {"status": "ok", "version2": "0.1.0-prototype"}
