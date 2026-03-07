@@ -8,18 +8,17 @@ from dotenv import load_dotenv
 load_dotenv()
 logger = logging.getLogger(__name__)
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-
-MODEL = "openai/gpt-oss-120b"  
+MODEL = "openai/gpt-oss-120b"
 # Other options:
 # "llama3-8b-8192"
 # "mixtral-8x7b-32768"
+
 
 SYSTEM_PROMPT = """You are an expert contract analyst. Find risky or unfair clauses.
 
 ONLY flag clauses that are genuinely problematic:
 - CRITICAL: Could cause huge financial/legal damage
-- HIGH: Unfair terms that should be changed  
+- HIGH: Unfair terms that should be changed
 - MEDIUM: Worth improving
 - LOW: Minor concerns
 
@@ -35,8 +34,23 @@ Return JSON array:
   }
 ]
 
-Return [] if section is fair/balanced. No markdown."""
+Return [] if section is fair/balanced. No markdown.
+"""
 
+
+# ─────────────────────────────────────────────
+# Lazy Groq client (prevents pytest / CI failure)
+# ─────────────────────────────────────────────
+
+def get_groq_client():
+    api_key = os.getenv("GROQ_API_KEY")
+
+    if not api_key:
+        raise RuntimeError(
+            "GROQ_API_KEY is not set. Please define it in environment variables."
+        )
+
+    return Groq(api_key=api_key)
 
 
 # ─────────────────────────────────────────────
@@ -47,10 +61,14 @@ def analyze_clauses(chunks: list[dict]) -> list[dict]:
     for chunk in chunks:
         try:
             clauses = _call_groq(chunk["full_text"])
+
             for c in clauses:
                 c["section_header"] = chunk["header"]
+
             all_clauses.extend(clauses)
+
             logger.info(f"{chunk['header']} → {len(clauses)} clauses")
+
         except Exception as e:
             logger.error(f"Failed on chunk '{chunk['header']}': {e}")
 
@@ -60,6 +78,8 @@ def analyze_clauses(chunks: list[dict]) -> list[dict]:
 # ─────────────────────────────────────────────
 
 def _call_groq(text: str) -> list[dict]:
+
+    client = get_groq_client()
 
     response = client.chat.completions.create(
         model=MODEL,
@@ -78,6 +98,7 @@ def _call_groq(text: str) -> list[dict]:
 # ─────────────────────────────────────────────
 
 def _parse(raw: str) -> list[dict]:
+
     raw = re.sub(r"^```(?:json)?\s*", "", raw, flags=re.MULTILINE)
     raw = re.sub(r"\s*```$", "", raw, flags=re.MULTILINE).strip()
 
@@ -85,12 +106,14 @@ def _parse(raw: str) -> list[dict]:
         return []
 
     match = re.search(r"\[.*\]", raw, re.DOTALL)
+
     if match:
         raw = match.group(0)
 
     try:
         data = json.loads(raw)
         return [_validate(c) for c in data if isinstance(c, dict)]
+
     except Exception as e:
         logger.error(f"JSON parse error: {e} | raw: {raw[:300]}")
         return []
@@ -110,6 +133,7 @@ VALID_RISK = {"low", "medium", "high", "critical"}
 
 
 def _validate(c: dict) -> dict:
+
     return {
         "type": c.get("type") if c.get("type") in VALID_TYPES else "other",
         "source_text": str(c.get("source_text", ""))[:400],
