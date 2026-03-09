@@ -1,5 +1,6 @@
 @import "tailwindcss";
-
+@import "components";
+@import "utilities";
 * {
   margin: 0;
   padding: 0;
