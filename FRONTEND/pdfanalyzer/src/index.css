@@ -1,14 +1,12 @@
-
-@import "components";
-@import "utilities";
 @import "tailwindcss";
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body, #root {
+html, body, #root {
   width: 100%;
   min-height: 100%;
 }
